@@ -14,7 +14,7 @@ Dự án này xây dựng một hệ thống ETL hoàn chỉnh cho kho dữ li�
 ### Các Thành phần Chính:
 - **MySQL**: Nguồn dữ liệu OLTP
 - **Debezium + Kafka**: CDC để capture thay đổi từ MySQL
-- **Postgres Staging**: Lưu trữ dữ liệu thô với lịch sử (op, ts_ms)
+- **Postgres Staging**: Lưu trữ dữ liệu thô với lịch sử (op, ts_m
 - **Airflow**: Orchestration cho ETL pipeline
 - **Postgres Star Schema**: Dimensions (user, product, dc_center, date, status) và fact_sales
 - **Metabase**: Công cụ BI để tạo dashboard từ star schema
