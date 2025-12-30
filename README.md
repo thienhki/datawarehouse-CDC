@@ -6,7 +6,7 @@ Dự án này xây dựng một hệ thống ETL hoàn chỉnh cho kho dữ li�
 
 ## Kiến trúc Tổng quan
 
-![Architecture Diagram](architecture.jpg)
+![Architecture Diagram](kientruc_doan.drawio.png)
 
 **Luồng dữ liệu:**
 - MySQL → Debezium + Kafka → Postgres Staging (lưu lịch sử op, ts_ms) → Airflow + Python ETL → Postgres Star Schema (Facts & Dimensions) → Metabase BI
