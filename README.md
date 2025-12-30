@@ -12,6 +12,8 @@ Dự án này xây dựng một hệ thống ETL (Extract, Transform, Load) hoà
                                                     (Processing: Airflow + Python ETL)
                                                                  ↓
                                     [Silver/Gold Layer: Postgres Star Schema] (Fact & Dimensions)
+                                                                 ↓
+                                                             [Metabase: BI Dashboard]
 ```
 
 ### Các Thành phần Chính:
@@ -20,6 +22,7 @@ Dự án này xây dựng một hệ thống ETL (Extract, Transform, Load) hoà
 - **Postgres Bronze**: Lưu trữ dữ liệu thô với lịch sử (op: operation, ts_ms: timestamp)
 - **Airflow**: Orchestration cho ETL pipeline
 - **Postgres Silver/Gold**: Star schema với dimensions (user, product, dc_center, date, status) và fact_sales
+- **Metabase**: Công cụ BI để tạo dashboard và báo cáo từ data warehouse
 
 ## Yêu cầu Tiên quyết
 
@@ -46,6 +49,7 @@ Services sẽ khởi động:
 - MySQL (port 3307)
 - Postgres (port 5433)
 - Airflow Webserver (port 8080) & Scheduler
+- Metabase (port 3000) - Uncomment trong `docker-compose.yaml` nếu cần
 
 ### 3. Cài đặt Dependencies
 ```bash
@@ -110,11 +114,18 @@ DAG sẽ:
 - Transform fact: sales
 - Sử dụng checkpoints để tránh duplicate data
 
+### 4. Sử dụng Metabase cho BI
+- Uncomment service Metabase trong `docker-compose.yaml`
+- Chạy lại `docker-compose up -d`
+- Truy cập Metabase: http://localhost:3000
+- Kết nối đến Postgres database `E_COMMERCE` để tạo dashboard từ star schema
+
 ## Cấu hình
 
 ### Database Connections
 - MySQL: `mysql+pymysql://dovanthien:210404@localhost:3307/e_commerce`
 - Postgres: `postgresql://dovanthien:210404@localhost:5433/E_COMMERCE`
+- Metabase: Kết nối đến Postgres `E_COMMERCE` qua port 5433
 
 ### Connectors
 - Source: `source_connector/mysql-ecommerce-source.json`
