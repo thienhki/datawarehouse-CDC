@@ -2,36 +2,22 @@
 
 ## Mô tả Dự án
 
-Dự án này xây dựng một hệ thống ETL (Extract, Transform, Load) hoàn chỉnh cho kho dữ liệu e-commerce. Hệ thống xử lý dữ liệu từ nguồn MySQL, qua Kafka/Debezium để lưu trữ lịch sử vào Postgres (bronze layer), sau đó biến đổi thành star schema (silver/gold layer) bằng Airflow và Python.
+Dự án này xây dựng một hệ thống ETL hoàn chỉnh cho kho dữ liệu e-commerce. Hệ thống xử lý dữ liệu từ MySQL qua Kafka/Debezium vào Postgres staging, sau đó biến đổi thành star schema bằng Airflow và Python.
 
 ## Kiến trúc Tổng quan
 
-![Architecture Diagram](architecture.jpeg)
+![Architecture Diagram](architecture.png)
 
-```
-[Source: MySQL] → (Ingestion: Debezium + Kafka) → [Bronze Layer: Postgres Staging] (Lưu lịch sử: op, ts_ms)
-                                                                 ↓
-                                                    (Processing: Airflow + Python ETL)
-                                                                 ↓
-                                    [Silver/Gold Layer: Postgres Star Schema] (Fact & Dimensions)
-                                                                 ↓
-                                                             [Metabase: BI Dashboard]
-```
-
-**Giải thích Layers:**
-- **Bronze**: Dữ liệu thô, giữ nguyên từ source
-- **Silver**: Dữ liệu đã transform, chuẩn hóa (dimensions)
-- **Gold**: Dữ liệu tổng hợp, sẵn sàng cho analytics (facts)
+**Luồng dữ liệu:**
+- MySQL → Debezium + Kafka → Postgres Staging (lưu lịch sử op, ts_ms) → Airflow + Python ETL → Postgres Star Schema (Facts & Dimensions) → Metabase BI
 
 ### Các Thành phần Chính:
 - **MySQL**: Nguồn dữ liệu OLTP
-- **Debezium + Kafka**: CDC (Change Data Capture) để capture thay đổi từ MySQL
-- **Postgres Bronze**: Lưu trữ dữ liệu thô với lịch sử (op: operation, ts_ms: timestamp)
+- **Debezium + Kafka**: CDC để capture thay đổi từ MySQL
+- **Postgres Staging**: Lưu trữ dữ liệu thô với lịch sử (op, ts_ms)
 - **Airflow**: Orchestration cho ETL pipeline
-- **Postgres Silver/Gold**: Star schema với dimensions (user, product, dc_center, date, status) và fact_sales
-  - **Silver**: Dữ liệu đã được làm sạch và chuẩn hóa (dimensions)
-  - **Gold**: Dữ liệu tổng hợp sẵn sàng cho BI và báo cáo (fact table với measures)
-- **Metabase**: Công cụ BI để tạo dashboard và báo cáo từ data warehouse
+- **Postgres Star Schema**: Dimensions (user, product, dc_center, date, status) và fact_sales
+- **Metabase**: Công cụ BI để tạo dashboard từ star schema
 
 
 
