@@ -1,0 +1,31 @@
+curl -X POST -H "Content-Type: application/json" \
+--data @"/home/dovanthien/do_an_etl/source_connector/mysql-ecommerce-source.json" \
+http://localhost:8083/connectors
+
+
+
+for file in /home/dovanthien/do_an_etl/sink_connector/*.json; do
+  echo "Đang tạo connector từ file: $file"
+  curl -X POST -H "Content-Type: application/json" \
+  --data @"$file" \
+  http://localhost:8083/connectors
+  echo -e "\n---"
+done
+
+kiem tra trang thai
+curl http://localhost:8083/connectors/postgres-distribution-centers-sink/status | jq
+
+kiem tra cac topic da tao
+docker exec -it kafka_demo kafka-topics --bootstrap-server kafka:9092 --list
+
+xem du lieu streaming truc tiep
+docker exec -it kafka_demo kafka-console-consumer --bootstrap-server kafka:9092 --topic mysql_ecommerce_server.orders --from-beginning
+
+kiem tra danh sach cac connector
+curl http://localhost:8083/connectors | jq
+
+Kiểm tra danh sách topic và trạng thái:
+docker exec -it kafka_demo kafka-topics --bootstrap-server kafka:9092 --describe
+
+xoa
+curl -X DELETE http://localhost:8083/connectors/mysql-ecommerce-source

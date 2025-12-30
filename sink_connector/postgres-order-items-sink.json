@@ -1,0 +1,47 @@
+{
+  "name": "postgres-order-items-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+
+    "connection.url": "jdbc:postgresql://postgres_dw:5432/E_COMMERCE",
+    "connection.user": "dovanthien",
+    "connection.password": "210404",
+
+    "auto.create": "true",
+    "auto.evolve": "true",
+
+    "insert.mode": "insert",
+    "pk.mode": "none",
+    "delete.enabled": "false",
+
+    "topics": "mysql_ecommerce_server.e_commerce_2.order_items",
+
+    "transforms": "unwrap,convertCreatedAt,convertShippedAt,convertDeliveredAt,convertReturnedAt,renameTopic",
+
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "true",
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "transforms.unwrap.add.fields": "op,ts_ms",
+    "transforms.unwrap.add.fields.prefix": "",
+
+    "transforms.convertCreatedAt.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.convertCreatedAt.field": "created_at",
+    "transforms.convertCreatedAt.target.type": "Timestamp",
+
+    "transforms.convertShippedAt.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.convertShippedAt.field": "shipped_at",
+    "transforms.convertShippedAt.target.type": "Timestamp",
+
+    "transforms.convertDeliveredAt.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.convertDeliveredAt.field": "delivered_at",
+    "transforms.convertDeliveredAt.target.type": "Timestamp",
+
+    "transforms.convertReturnedAt.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.convertReturnedAt.field": "returned_at",
+    "transforms.convertReturnedAt.target.type": "Timestamp",
+
+    "transforms.renameTopic.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.renameTopic.regex": "mysql_ecommerce_server\\.e_commerce_2\\.(.*)",
+    "transforms.renameTopic.replacement": "$1"
+  }
+}

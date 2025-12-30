@@ -1,0 +1,35 @@
+{
+  "name": "postgres-users-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+
+    "connection.url": "jdbc:postgresql://postgres_dw:5432/E_COMMERCE",
+    "connection.user": "dovanthien",
+    "connection.password": "210404",
+
+    "auto.create": "true",
+    "auto.evolve": "true",
+
+    "insert.mode": "insert",
+    "pk.mode": "none",
+    "delete.enabled": "false",
+
+    "topics": "mysql_ecommerce_server.e_commerce_2.users",
+
+    "transforms": "unwrap,convertCreatedAt,renameTopic",
+
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "true",
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "transforms.unwrap.add.fields": "op,ts_ms",
+    "transforms.unwrap.add.fields.prefix": "",
+
+    "transforms.convertCreatedAt.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+    "transforms.convertCreatedAt.field": "created_at",
+    "transforms.convertCreatedAt.target.type": "Timestamp",
+
+    "transforms.renameTopic.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.renameTopic.regex": "mysql_ecommerce_server\\.e_commerce_2\\.(.*)",
+    "transforms.renameTopic.replacement": "$1"
+  }
+}

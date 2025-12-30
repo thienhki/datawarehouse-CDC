@@ -1,0 +1,16 @@
+# Data
+data/
+data_sources/
+*.csv
+*.parquet
+*.ibd
+binlog.*
+
+# MySQL
+mysql/
+*.log
+
+# Python
+__pycache__/
+venv/
+.env
