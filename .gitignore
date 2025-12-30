@@ -14,3 +14,4 @@ mysql/
 __pycache__/
 venv/
 .env
+logs/
