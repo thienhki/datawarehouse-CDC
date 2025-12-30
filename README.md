@@ -6,6 +6,8 @@ Dự án này xây dựng một hệ thống ETL (Extract, Transform, Load) hoà
 
 ## Kiến trúc Tổng quan
 
+![Architecture Diagram](architecture.jpeg)
+
 ```
 [Source: MySQL] → (Ingestion: Debezium + Kafka) → [Bronze Layer: Postgres Staging] (Lưu lịch sử: op, ts_ms)
                                                                  ↓
@@ -16,12 +18,19 @@ Dự án này xây dựng một hệ thống ETL (Extract, Transform, Load) hoà
                                                              [Metabase: BI Dashboard]
 ```
 
+**Giải thích Layers:**
+- **Bronze**: Dữ liệu thô, giữ nguyên từ source
+- **Silver**: Dữ liệu đã transform, chuẩn hóa (dimensions)
+- **Gold**: Dữ liệu tổng hợp, sẵn sàng cho analytics (facts)
+
 ### Các Thành phần Chính:
 - **MySQL**: Nguồn dữ liệu OLTP
 - **Debezium + Kafka**: CDC (Change Data Capture) để capture thay đổi từ MySQL
 - **Postgres Bronze**: Lưu trữ dữ liệu thô với lịch sử (op: operation, ts_ms: timestamp)
 - **Airflow**: Orchestration cho ETL pipeline
 - **Postgres Silver/Gold**: Star schema với dimensions (user, product, dc_center, date, status) và fact_sales
+  - **Silver**: Dữ liệu đã được làm sạch và chuẩn hóa (dimensions)
+  - **Gold**: Dữ liệu tổng hợp sẵn sàng cho BI và báo cáo (fact table với measures)
 - **Metabase**: Công cụ BI để tạo dashboard và báo cáo từ data warehouse
 
 
@@ -151,6 +160,8 @@ curl -X DELETE http://localhost:8083/connectors/mysql-ecommerce-source
 ## Cấu trúc Thư mục
 
 ```
+├── architecture.dot               # Diagram source file
+├── architecture.png               # Architecture diagram image
 ├── dags/                          # Airflow DAGs
 │   └── e_commerce_etl.py
 ├── data_sources/                  # Dữ liệu nguồn CSV
