@@ -24,11 +24,7 @@ Dự án này xây dựng một hệ thống ETL (Extract, Transform, Load) hoà
 - **Postgres Silver/Gold**: Star schema với dimensions (user, product, dc_center, date, status) và fact_sales
 - **Metabase**: Công cụ BI để tạo dashboard và báo cáo từ data warehouse
 
-## Yêu cầu Tiên quyết
 
-- Docker & Docker Compose
-- Python 3.10+
-- Git
 
 ## Cài đặt và Thiết lập
 
@@ -169,12 +165,3 @@ curl -X DELETE http://localhost:8083/connectors/mysql-ecommerce-source
 └── requirements.txt               # Python dependencies
 ```
 
-## Phát triển và Đóng góp
-
-- Thêm transforms mới trong `dags/etl/transform/`
-- Update DAG dependencies trong `e_commerce_etl.py`
-- Test locally trước khi commit
-
-## License
-
-[Thêm license nếu có]
